@@ -1,0 +1,62 @@
+[
+  {
+    "job_title": "Sales Manager",
+    "company_id": "12345",
+    "category": "Sales",
+    "info": "We are seeking an experienced Sales Manager to lead our sales team and drive revenue growth.",
+    "salary": "Competitive",
+    "location": "New York, USA",
+    "approved": true,
+    "visa": "Sponsorship available"
+  },
+  {
+    "job_title": "HR Business Partner",
+    "company_id": "67890",
+    "category": "HR",
+    "info": "Join our dynamic HR team as an HR Business Partner and support our organization in talent acquisition and employee relations.",
+    "salary": "Negotiable",
+    "location": "London, UK",
+    "approved": true,
+    "visa": "Work permit required"
+  },
+  {
+    "job_title": "Full-Stack Developer",
+    "company_id": "23456",
+    "category": "Full-Stack",
+    "info": "We are hiring a Full-Stack Developer to work on our cutting-edge web application using the latest technologies.",
+    "salary": "$80,000 - $100,000",
+    "location": "San Francisco, USA",
+    "approved": true,
+    "visa": "Open to all"
+  },
+  {
+    "job_title": "Sales Representative",
+    "company_id": "78901",
+    "category": "Sales",
+    "info": "Looking for a driven Sales Representative to generate leads and close deals for our expanding customer base.",
+    "salary": "Commission-based",
+    "location": "Sydney, Australia",
+    "approved": true,
+    "visa": "Work visa sponsorship"
+  },
+  {
+    "job_title": "HR Coordinator",
+    "company_id": "34567",
+    "category": "HR",
+    "info": "Join our HR team as an HR Coordinator and assist in various HR activities, including recruitment and onboarding processes.",
+    "salary": "£25,000 - £30,000",
+    "location": "Manchester, UK",
+    "approved": true,
+    "visa": "No visa sponsorship"
+  },
+  {
+    "job_title": "Full-Stack Engineer",
+    "company_id": "89012",
+    "category": "Full-Stack",
+    "info": "We are looking for a talented Full-Stack Engineer to contribute to the development of our innovative software solutions.",
+    "salary": "€60,000 - €80,000",
+    "location": "Berlin, Germany",
+    "approved": true,
+    "visa": "EU work permit required"
+  }
+]
