@@ -18,7 +18,6 @@ let schema = new mongoose.Schema({
   role: {
     type: String, default: "user"
   },
-  nickname: String,
   favs_ar: {
     type: Array, default: []
   }
@@ -37,6 +36,7 @@ exports.validateJoi = (_reqBody) => {
     email: Joi.string().min(1).max(300).email().required(),
     birth_date: Joi.date().required(),
     password: Joi.string().min(1).max(100).required(),
+    gender:Joi.string().min(1).max(1).allow("",null)
   })
   return joiSchema.validate(_reqBody)
 }

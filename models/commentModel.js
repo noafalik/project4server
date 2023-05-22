@@ -9,7 +9,7 @@ let schema = new mongoose.Schema({
     },
     stars: Number,
     likes: {
-        type: Number, default: 0
+        type: Array, default: []
     }
 })
 exports.CommentModel = mongoose.model("comments", schema)

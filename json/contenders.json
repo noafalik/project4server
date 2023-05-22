@@ -1,74 +1,72 @@
-{
-    "applications": [
-      {
-        "user_id": "123",
-        "job_id": "job_001",
-        "notes": "I have extensive experience in the field.",
-        "starting": "2023-05-01",
-        "video_link": "https://example.com/video123"
-      },
-      {
-        "user_id": "456",
-        "job_id": "job_002",
-        "notes": "I'm a quick learner and highly motivated.",
-        "starting": "2023-06-15",
-        "video_link": "https://example.com/video456"
-      },
-      {
-        "user_id": "789",
-        "job_id": "job_003",
-        "notes": "I have strong problem-solving skills.",
-        "starting": "2023-07-01",
-        "video_link": "https://example.com/video789"
-      },
-      {
-        "user_id": "234",
-        "job_id": "job_004",
-        "notes": "I'm a team player and have excellent communication skills.",
-        "starting": "2023-08-10",
-        "video_link": "https://example.com/video234"
-      },
-      {
-        "user_id": "567",
-        "job_id": "job_005",
-        "notes": "I'm proficient in multiple programming languages.",
-        "starting": "2023-09-01",
-        "video_link": "https://example.com/video567"
-      },
-      {
-        "user_id": "890",
-        "job_id": "job_006",
-        "notes": "I have a strong background in sales.",
-        "starting": "2023-09-15",
-        "video_link": "https://example.com/video890"
-      },
-      {
-        "user_id": "345",
-        "job_id": "job_007",
-        "notes": "I'm highly organized and detail-oriented.",
-        "starting": "2023-10-01",
-        "video_link": "https://example.com/video345"
-      },
-      {
-        "user_id": "678",
-        "job_id": "job_008",
-        "notes": "I have leadership experience and can work well under pressure.",
-        "starting": "2023-10-15",
-        "video_link": "https://example.com/video678"
-      },
-      {
-        "user_id": "901",
-        "job_id": "job_009",
-        "notes": "I'm passionate about the industry and eager to contribute.",
-        "starting": "2023-11-01",
-        "video_link": "https://example.com/video901"
-      },
-      {
-        "user_id": "123",
-        "job_id": "job_010",
-        "notes": "I have previous experience working with similar projects.",
-        "starting": "2023-11-15",
-        "video_link": "https://example.com/video123"
-      }
-    ]
+[
+  {
+    "user_id": "123",
+    "job_id": "job_001",
+    "notes": "I have extensive experience in the field.",
+    "starting": "2023-05-01",
+    "video_link": "https://example.com/video123"
+  },
+  {
+    "user_id": "456",
+    "job_id": "job_002",
+    "notes": "I'm a quick learner and highly motivated.",
+    "starting": "2023-06-15",
+    "video_link": "https://example.com/video456"
+  },
+  {
+    "user_id": "789",
+    "job_id": "job_003",
+    "notes": "I have strong problem-solving skills.",
+    "starting": "2023-07-01",
+    "video_link": "https://example.com/video789"
+  },
+  {
+    "user_id": "234",
+    "job_id": "job_004",
+    "notes": "I'm a team player and have excellent communication skills.",
+    "starting": "2023-08-10",
+    "video_link": "https://example.com/video234"
+  },
+  {
+    "user_id": "567",
+    "job_id": "job_005",
+    "notes": "I'm proficient in multiple programming languages.",
+    "starting": "2023-09-01",
+    "video_link": "https://example.com/video567"
+  },
+  {
+    "user_id": "890",
+    "job_id": "job_006",
+    "notes": "I have a strong background in sales.",
+    "starting": "2023-09-15",
+    "video_link": "https://example.com/video890"
+  },
+  {
+    "user_id": "345",
+    "job_id": "job_007",
+    "notes": "I'm highly organized and detail-oriented.",
+    "starting": "2023-10-01",
+    "video_link": "https://example.com/video345"
+  },
+  {
+    "user_id": "678",
+    "job_id": "job_008",
+    "notes": "I have leadership experience and can work well under pressure.",
+    "starting": "2023-10-15",
+    "video_link": "https://example.com/video678"
+  },
+  {
+    "user_id": "901",
+    "job_id": "job_009",
+    "notes": "I'm passionate about the industry and eager to contribute.",
+    "starting": "2023-11-01",
+    "video_link": "https://example.com/video901"
+  },
+  {
+    "user_id": "123",
+    "job_id": "job_010",
+    "notes": "I have previous experience working with similar projects.",
+    "starting": "2023-11-15",
+    "video_link": "https://example.com/video123"
   }
+]
