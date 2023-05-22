@@ -1,0 +1,14 @@
+[
+  {
+    "category_name": "Sales",
+    "info": "Information about the Sales category"
+  },
+  {
+    "category_name": "HR",
+    "info": "Information about the HR category"
+  },
+  {
+    "category_name": "Full-stack",
+    "info": "Information about the Full-stack category"
+  }
+]
