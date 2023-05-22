@@ -5,8 +5,8 @@ let schema = new mongoose.Schema({
     user_id: String,
     company_name: String,
     contactPhone:String,
-    // logoPic:File,
-    state: Number,
+    logo_url:String,
+    state: String,
 }, {timestamps:true})
 
 exports.CompanyModel = mongoose.model("companies", schema)
