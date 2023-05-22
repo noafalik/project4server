@@ -135,7 +135,7 @@ router.patch("/updateFav", auth, async (req, res) => {
 
 router.patch("/updateRequest", auth, async (req, res) => {
   try {
-    const favs_ar = req.body.request_ar;
+    const request_ar = req.body.request_ar;
     if (!Array.isArray(request_ar)) {
       return res.status(400).json({ err: "You must send requaet_ar prop of array of ids" })
     }
