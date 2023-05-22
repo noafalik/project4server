@@ -118,18 +118,33 @@ router.patch("/changeRole/:id/:role", authAdmin, async (req, res) => {
 
 })
 
-router.patch("/updateFav", auth, async(req,res) => {
-  try{
+router.patch("/updateFav", auth, async (req, res) => {
+  try {
     const favs_ar = req.body.favs_ar;
-    if(!Array.isArray(favs_ar)){
-     return res.status(400).json({err:"You must send favs_ar prop of array of ids"})
+    if (!Array.isArray(favs_ar)) {
+      return res.status(400).json({ err: "You must send favs_ar prop of array of ids" })
     }
-    const data = await UserModel.updateOne({_id:req.tokenData._id},{favs_ar})
+    const data = await UserModel.updateOne({ _id: req.tokenData._id }, { favs_ar })
     res.json(data);
   }
-  catch(err){
+  catch (err) {
     console.log(err);
-    res.status(502).json({err})
+    res.status(502).json({ err })
+  }
+})
+
+router.patch("/updateRequest", auth, async (req, res) => {
+  try {
+    const favs_ar = req.body.request_ar;
+    if (!Array.isArray(request_ar)) {
+      return res.status(400).json({ err: "You must send requaet_ar prop of array of ids" })
+    }
+    const data = await UserModel.updateOne({ _id: req.tokenData._id }, { request_ar })
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
   }
 })
 
