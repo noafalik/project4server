@@ -1,74 +1,72 @@
-{
-    "companies": [
-      {
-        "user_id": "123",
-        "company_name": "ABC Corp",
-        "contactPhone": "123-456-7890",
-        "state": "California",
-        "logo_url": "https://example.com/abc-corp-logo.png"
-      },
-      {
-        "user_id": "456",
-        "company_name": "XYZ Inc",
-        "contactPhone": "987-654-3210",
-        "state": "New York",
-        "logo_url": "https://example.com/xyz-inc-logo.png"
-      },
-      {
-        "user_id": "789",
-        "company_name": "123 Industries",
-        "contactPhone": "555-123-4567",
-        "state": "Texas",
-        "logo_url": "https://example.com/123-industries-logo.png"
-      },
-      {
-        "user_id": "234",
-        "company_name": "Tech Solutions",
-        "contactPhone": "222-333-4444",
-        "state": "Washington",
-        "logo_url": "https://example.com/tech-solutions-logo.png"
-      },
-      {
-        "user_id": "567",
-        "company_name": "Global Enterprises",
-        "contactPhone": "999-888-7777",
-        "state": "Florida",
-        "logo_url": "https://example.com/global-enterprises-logo.png"
-      },
-      {
-        "user_id": "890",
-        "company_name": "Innovative Corp",
-        "contactPhone": "777-999-1111",
-        "state": "Massachusetts",
-        "logo_url": "https://example.com/innovative-corp-logo.png"
-      },
-      {
-        "user_id": "345",
-        "company_name": "Future Industries",
-        "contactPhone": "444-555-6666",
-        "state": "Illinois",
-        "logo_url": "https://example.com/future-industries-logo.png"
-      },
-      {
-        "user_id": "678",
-        "company_name": "Dynamic Tech",
-        "contactPhone": "888-222-5555",
-        "state": "Colorado",
-        "logo_url": "https://example.com/dynamic-tech-logo.png"
-      },
-      {
-        "user_id": "901",
-        "company_name": "Inventive Solutions",
-        "contactPhone": "666-777-8888",
-        "state": "Arizona",
-        "logo_url": "https://example.com/inventive-solutions-logo.png"
-      },
-      {
-        "user_id": "123",
-        "company_name": "Smart Ventures",
-        "contactPhone": "111-222-3333",
-        "state": "Georgia",
-        "logo_url": "https://example.com/smart-ventures-logo.png"
-      }
-    ]
+[
+  {
+    "user_id": "123",
+    "company_name": "ABC Corp",
+    "contactPhone": "123-456-7890",
+    "state": "California",
+    "logo_url": "https://example.com/abc-corp-logo.png"
+  },
+  {
+    "user_id": "456",
+    "company_name": "XYZ Inc",
+    "contactPhone": "987-654-3210",
+    "state": "New York",
+    "logo_url": "https://example.com/xyz-inc-logo.png"
+  },
+  {
+    "user_id": "789",
+    "company_name": "123 Industries",
+    "contactPhone": "555-123-4567",
+    "state": "Texas",
+    "logo_url": "https://example.com/123-industries-logo.png"
+  },
+  {
+    "user_id": "234",
+    "company_name": "Tech Solutions",
+    "contactPhone": "222-333-4444",
+    "state": "Washington",
+    "logo_url": "https://example.com/tech-solutions-logo.png"
+  },
+  {
+    "user_id": "567",
+    "company_name": "Global Enterprises",
+    "contactPhone": "999-888-7777",
+    "state": "Florida",
+    "logo_url": "https://example.com/global-enterprises-logo.png"
+  },
+  {
+    "user_id": "890",
+    "company_name": "Innovative Corp",
+    "contactPhone": "777-999-1111",
+    "state": "Massachusetts",
+    "logo_url": "https://example.com/innovative-corp-logo.png"
+  },
+  {
+    "user_id": "345",
+    "company_name": "Future Industries",
+    "contactPhone": "444-555-6666",
+    "state": "Illinois",
+    "logo_url": "https://example.com/future-industries-logo.png"
+  },
+  {
+    "user_id": "678",
+    "company_name": "Dynamic Tech",
+    "contactPhone": "888-222-5555",
+    "state": "Colorado",
+    "logo_url": "https://example.com/dynamic-tech-logo.png"
+  },
+  {
+    "user_id": "901",
+    "company_name": "Inventive Solutions",
+    "contactPhone": "666-777-8888",
+    "state": "Arizona",
+    "logo_url": "https://example.com/inventive-solutions-logo.png"
+  },
+  {
+    "user_id": "123",
+    "company_name": "Smart Ventures",
+    "contactPhone": "111-222-3333",
+    "state": "Georgia",
+    "logo_url": "https://example.com/smart-ventures-logo.png"
   }
+]
