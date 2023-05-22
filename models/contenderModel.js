@@ -9,7 +9,7 @@ let schema = new mongoose.Schema({
     video_link:String
 }, {timestamps:true})
 
-exports.ContenderModel = mongoose.model("companies", schema)
+exports.ContenderModel = mongoose.model("contenders", schema)
 
 exports.validateContender = (_reqBody) => {
    return Joi.object({

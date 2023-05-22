@@ -9,7 +9,7 @@ router.get("/", async(req,res) => {
 
 router.get("/companyInfo", auth, async (req, res) => {
   try {
-    let company = await CompanyModelModel.findOne({ user_id: req.tokenData._id })
+    let company = await CompanyModel.findOne({ user_id: req.tokenData._id })
     res.json(company)
   }
   catch (err) {
@@ -18,7 +18,7 @@ router.get("/companyInfo", auth, async (req, res) => {
   }
 })
 
-router.post("/", async (req, res) => {
+router.post("/",auth, async (req, res) => {
   let validBody = validateCompany(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
