@@ -3,7 +3,7 @@ const {config} = require("../config/secret");
 
 exports.auth = (req,res,next) => {
   // בודק בכלל שטוקן נשלח בהדר
-  let token = req.header("x-api-key");
+  let token = req.cookies.token;
   if(!token){
     return res.status(401).json({err:"You must send token to this endpoint "});
   }
@@ -25,7 +25,7 @@ exports.auth = (req,res,next) => {
 // אימות לאדמין
 exports.authAdmin = (req,res,next) => {
   // בודק בכלל שטוקן נשלח בהדר
-  let token = req.header("x-api-key");
+  let token = req.cookies.token;
   if(!token){
     return res.status(401).json({err:"You must send token to this endpoint "});
   }

@@ -89,7 +89,8 @@ router.post("/login", async (req, res) => {
     let token = createToken(user._id, user.role)
     // {token} -> {token:token } אם השם של המאפיין ומשתנה/פרמטר זהה אין צורך בנקודתיים
     // shotcut prop value
-    return res.json({ token })
+    res.cookie('token', token, {httpOnly:true, sameSite:"lax"});
+    return res.status(200).json({message:"Logged in"});
   }
   catch (err) {
     console.log(err);

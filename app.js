@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const cors  = require("cors");
+const cookieParser = require("cookie-parser");
 
 const {routesInit} = require("./routes/configRoutes");
 // התחברות למסד 
@@ -9,7 +10,11 @@ require("./db/mongoConnect");
 
 const app = express();
 // מבטל אבטחה , ומאפשר לבצע בקשת איי פי איי מדומיין משרת אחר
-app.use(cors());
+app.use(cors({
+    origin:'http://localhost:3001',
+    credentials:true
+}));
+app.use(cookieParser());
 // כדי שנוכל לשלוח באדי מצד לקוח
 app.use(express.json());
 // להגדיר תיקייה סטטית שתיהיה התיקייה בשם פאבליק
