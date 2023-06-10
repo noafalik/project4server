@@ -45,6 +45,19 @@ router.get("/usersList", authAdmin, async (req, res) => {
   }
 })
 
+router.get("/count", async (req, res) => {
+  try {
+    let perPage = req.query.perPage || 5;
+    // יקבל רק את כמות הרשומות בקולקשן
+    const count = await UserModel.countDocuments()
+    res.json({ count, pages: Math.ceil(count / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 
 router.post("/", async (req, res) => {
   let validBody = validateJoi(req.body);

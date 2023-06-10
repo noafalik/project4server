@@ -5,7 +5,11 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let data = await CategoryModel.find({}).limit(20);
+    let perPage = req.query.perPage || 5;
+    let page = req.query.page - 1 || 0;
+    let data = await CategoryModel.find({}).limit(20)
+    .skip(page * perPage)
+    .sort({ _id: -1 })
     res.json(data);
   }
   catch (err) {
@@ -19,6 +23,19 @@ router.get("/single/:id", async (req, res) => {
     const id = req.params.id
     let data = await CategoryModel.findOne({ _id: id });
     res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/count", async (req, res) => {
+  try {
+    let perPage = req.query.perPage || 5;
+    // יקבל רק את כמות הרשומות בקולקשן
+    const count = await CategoryModel.countDocuments()
+    res.json({ count, pages: Math.ceil(count / perPage) })
   }
   catch (err) {
     console.log(err);

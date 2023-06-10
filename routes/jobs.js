@@ -1,7 +1,7 @@
 const express = require("express");
 const { JobModel, validateJob } = require("../models/jobModel");
 const router = express.Router();
-const { auth } = require("../middlewares/auth");
+const { auth, authAdmin } = require("../middlewares/auth");
 
 router.get("/", async (req, res) => {
   const perPage = req.query.perPage || 10;
@@ -61,6 +61,18 @@ router.get("/single/:id", async (req, res) => {
   }
 })
 
+router.get("/count", async (req, res) => {
+  try {
+    let perPage = req.query.perPage || 5;
+    // יקבל רק את כמות הרשומות בקולקשן
+    const count = await JobModel.countDocuments()
+    res.json({ count, pages: Math.ceil(count / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
 
 // FOR TESTING IN QUERY IN MONGO
 // שאילתא טובה בשביל לשלוף מועדפים של משתמש, בנוסף מאפשר נניח לשלוף
@@ -116,10 +128,10 @@ router.put("/:id", auth, async (req, res) => {
     // בודק אם המשתמש הוא אדמין ונותן לו אפשרות לערוך את
     // כל הרשומות גם כאלו שלא שלו
     if (req.tokenData.role == "admin") {
-      data = await VideoModel.updateOne({ _id: id }, req.body);
+      data = await JobModelModel.updateOne({ _id: id }, req.body);
     }
     else if (req.tokenData.role == "company") {
-      data = await VideoModel.updateOne({ _id: id, user_id: req.tokenData._id }, req.body);
+      data = await JobModel.updateOne({ _id: id, user_id: req.tokenData._id }, req.body);
     }
     else {
       return res.status(400).json({ err: "You must be admin or company!" })
@@ -130,6 +142,21 @@ router.put("/:id", auth, async (req, res) => {
     console.log(err);
     res.status(502).json({ err })
   }
+})
+router.patch("/changeApproval/:id/:approved", authAdmin, async (req, res) => {
+  const id = req.params.id;
+  const approved = req.params.approved;
+  try {
+    // 642297fa073568668885db3a -> איי די של הסופר אדמין
+    const data = await JobModel.updateOne({ _id: id }, { approved: approved })
+    res.json(data);
+
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+
 })
 
 router.delete("/:id", auth, async (req, res) => {

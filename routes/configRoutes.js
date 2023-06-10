@@ -4,6 +4,7 @@ const jobsR = require("./jobs");
 const contendersR = require("./contenders");
 const companiesR = require("./companies");
 const commentsR = require("./comments");
+const categoriesR = require("./categories");
 
 
 
@@ -16,6 +17,7 @@ exports.routesInit = (app) => {
   app.use("/contenders",contendersR);
   app.use("/companies",companiesR);
   app.use("/comments",commentsR);
+  app.use("/categories",categoriesR);
 
 
 

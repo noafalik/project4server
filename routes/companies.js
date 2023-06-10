@@ -23,11 +23,24 @@ router.get("/companiesList", authAdmin, async (req, res) => {
     let perPage = req.query.perPage || 5;
     let page = req.query.page - 1 || 0;
     let data = await CompanyModel
-      .find({}, { password: 0 })
+      .find({})
       .limit(perPage)
       .skip(page * perPage)
       .sort({ _id: -1 })
     res.json(data)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/count", async (req, res) => {
+  try {
+    let perPage = req.query.perPage || 5;
+    // יקבל רק את כמות הרשומות בקולקשן
+    const count = await CompanyModel.countDocuments()
+    res.json({ count, pages: Math.ceil(count / perPage) })
   }
   catch (err) {
     console.log(err);
