@@ -11,7 +11,7 @@ require("./db/mongoConnect");
 const app = express();
 // מבטל אבטחה , ומאפשר לבצע בקשת איי פי איי מדומיין משרת אחר
 app.use(cors({
-    origin:'http://localhost:3001',
+    origin:'http://localhost:3000',
     credentials:true
 }));
 app.use(cookieParser());

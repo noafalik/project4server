@@ -18,6 +18,23 @@ router.get("/companyInfo", auth, async (req, res) => {
   }
 })
 
+router.get("/companiesList", authAdmin, async (req, res) => {
+  try {
+    let perPage = req.query.perPage || 5;
+    let page = req.query.page - 1 || 0;
+    let data = await CompanyModel
+      .find({}, { password: 0 })
+      .limit(perPage)
+      .skip(page * perPage)
+      .sort({ _id: -1 })
+    res.json(data)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.post("/",auth, async (req, res) => {
   let validBody = validateCompany(req.body);
   if (validBody.error) {
