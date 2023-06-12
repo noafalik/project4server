@@ -45,6 +45,19 @@ router.get("/usersList", authAdmin, async (req, res) => {
   }
 })
 
+router.get("/count", async (req, res) => {
+  try {
+    let perPage = req.query.perPage || 5;
+    // יקבל רק את כמות הרשומות בקולקשן
+    const count = await UserModel.countDocuments()
+    res.json({ count, pages: Math.ceil(count / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 
 router.post("/", async (req, res) => {
   let validBody = validateJoi(req.body);
@@ -89,7 +102,8 @@ router.post("/login", async (req, res) => {
     let token = createToken(user._id, user.role)
     // {token} -> {token:token } אם השם של המאפיין ומשתנה/פרמטר זהה אין צורך בנקודתיים
     // shotcut prop value
-    return res.json({ token })
+    res.cookie('token', token, {httpOnly:true, sameSite:"lax"});
+    return res.status(200).json({message:"Logged in", token});
   }
   catch (err) {
     console.log(err);
