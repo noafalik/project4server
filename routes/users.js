@@ -97,7 +97,7 @@ router.post("/login", async (req, res) => {
     // בדיקה שהסיסמא ברשומה המוצפנת תואמת לסיסמא בבאדי
     let passwordValid = await bcrypt.compare(req.body.password, user.password);
     if (!passwordValid) {
-      return res.status(401).json({ err: "Password worng" });
+      return res.status(401).json({ err: "Password wrong" });
     }
     let token = createToken(user._id, user.role)
     // {token} -> {token:token } אם השם של המאפיין ומשתנה/פרמטר זהה אין צורך בנקודתיים

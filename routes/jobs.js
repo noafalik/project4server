@@ -11,31 +11,35 @@ router.get("/", async (req, res) => {
   const category = req.query.category;
   // const salary = req.query.salary; להוסיף לפי טווח
   const location = req.query.location;
-  const user_id = req.query.user_id;
+  const visa = req.query.visa;
+  const minSalary = req.query.minSalary;
+  const maxSalary = req.query.maxSalary;
+  const approved = req.query.approved;
+  const company_id = req.query.company_id;
   //?s=
   const search = req.query.s;
 
   try {
-    let filterFind = {}
-    if (category) {
-      filterFind = { category_code: category }
-    }
-    else if (user_id) {
-      filterFind = { user_id }
-    }
-    else if (search) {
-      const searchExp = new RegExp(search, "i")
-      filterFind = { $or: [{ title: searchExp }, { info: searchExp }] }
-    }
-
-    // if (salary) {
-    //   filterFind.salary = salary; 
-    // }
-
+    const searchExp = new RegExp(search, "i");
+    const filter = [];
+    if (category) filter.push({ category });
     if (location) {
-      filterFind.location = location;
+      const locationExp = new RegExp(location, "i");
+      filter.push({ location: locationExp })
     }
-
+    if (visa) {
+      const visaExp = new RegExp(visa, "i");
+      filter.push({ visa: visaExp });
+    }
+    if (company_id) filter.push({ company_id });
+    if (search) {
+      searchExp = new RegExp(search, "i");
+      filter.push({ search: searchExp });
+    }
+    if (approved) filter.push({approved});
+    if(minSalary)filter.push({salary:{$gte:minSalary}});
+    if(maxSalary)filter.push({salary:{$lte:maxSalary}});
+    const filterFind = { $and: filter };
     let data = await JobModel
       .find(filterFind)
       .limit(perPage)
@@ -165,9 +169,9 @@ router.delete("/:id", auth, async (req, res) => {
     let data;
     // נותן אפשרות לאדמין למחוק את כל הרשומות
     if (req.tokenData.role == "admin") {
-      data = await JobModel.deleteOne({ _id: id});
+      data = await JobModel.deleteOne({ _id: id });
     }
-    else{
+    else {
       data = await JobModel.deleteOne({ _id: id, user_id: req.tokenData._id });
     }
     res.json(data)
