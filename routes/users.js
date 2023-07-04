@@ -103,11 +103,23 @@ router.post("/login", async (req, res) => {
     // {token} -> {token:token } אם השם של המאפיין ומשתנה/פרמטר זהה אין צורך בנקודתיים
     // shotcut prop value
     res.cookie('token', token, {httpOnly:true, sameSite:"lax"});
-    return res.status(200).json({message:"Logged in", token});
+    return res.status(200).json({message:"Logged in", login: true});
   }
   catch (err) {
     console.log(err);
     res.status(502).json({ err })
+  }
+})
+
+router.post("/logout", async (req, res) => {
+  
+  try {
+    res.clearCookie('token');
+    res.json({logout:true});
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err });
   }
 })
 
