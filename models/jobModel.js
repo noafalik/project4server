@@ -5,14 +5,16 @@ let schema = new mongoose.Schema({
     job_title: String,
     company_id: String,
     category_id: String,
-    info : String,
+    info: String,
     salary: Number,
-    location : String,
+    location: String,
     approved: {
         type: Boolean, default: false
     },
-    visa : String
-},{timestamps:true})
+    visa: String,
+    img_url: String,
+    continent: String,
+}, { timestamps: true })
 exports.JobModel = mongoose.model("jobs", schema)
 
 exports.validateJob = (_reqBody) => {
@@ -21,6 +23,8 @@ exports.validateJob = (_reqBody) => {
         info: Joi.string().min(2).max(1200).allow(null, ""),
         salary: Joi.number().min(1).max(10).required(),
         location: Joi.string().min(2).max(45).required(),
-        visa: Joi.string().min(2).max(60).required()
+        visa: Joi.string().min(2).max(60).required(),
+        img_url: Joi.string().min(2).max(5000).allow(null, ""),
+        continent: Joi.string().min(2).max(70).required()
     }).validate(_reqBody)
 }
