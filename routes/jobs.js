@@ -4,22 +4,19 @@ const router = express.Router();
 const { auth, authAdmin } = require("../middlewares/auth");
 
 router.get("/", async (req, res) => {
-  const perPage = req.query.perPage || 10;
-  const page = req.query.page - 1 || 0;
   const sort = req.query.sort || "_id";
   const reverse = req.query.reverse == "yes" ? 1 : -1;
   const category = req.query.category;
-  // const salary = req.query.salary; להוסיף לפי טווח
   const location = req.query.location;
   const visa = req.query.visa;
   const minSalary = req.query.minSalary;
   const maxSalary = req.query.maxSalary;
   const approved = req.query.approved;
   const company_id = req.query.company_id;
-  //?s=
   const search = req.query.s;
-
   try {
+    const page = req.query.page - 1 || 0;
+    const perPage = req.query.perPage || 5;
     const searchExp = new RegExp(search, "i");
     const filter = [];
     if (category) filter.push({ category });
@@ -33,8 +30,7 @@ router.get("/", async (req, res) => {
     }
     if (company_id) filter.push({ company_id });
     if (search) {
-      searchExp = new RegExp(search, "i");
-      filter.push({ search: searchExp });
+      filter.push({$or:[{ job_title: searchExp }, {info:searchExp}]});
     }
     if (approved) filter.push({approved});
     if(minSalary)filter.push({salary:{$gte:minSalary}});
@@ -67,9 +63,37 @@ router.get("/single/:id", async (req, res) => {
 
 router.get("/count", async (req, res) => {
   try {
-    let perPage = req.query.perPage || 5;
+    const category = req.query.category;
+    const location = req.query.location;
+    const visa = req.query.visa;
+    const minSalary = req.query.minSalary;
+    const maxSalary = req.query.maxSalary;
+    const approved = req.query.approved;
+    const company_id = req.query.company_id;
+    const search = req.query.s;
+    const page = req.query.page - 1 || 0;
+    const perPage = req.query.perPage || 5;
+    const searchExp = new RegExp(search, "i");
+    const filter = [];
+    if (category) filter.push({ category });
+    if (location) {
+      const locationExp = new RegExp(location, "i");
+      filter.push({ location: locationExp })
+    }
+    if (visa) {
+      const visaExp = new RegExp(visa, "i");
+      filter.push({ visa: visaExp });
+    }
+    if (company_id) filter.push({ company_id });
+    if (search) {
+      filter.push({$or:[{ job_title: searchExp }, {info:searchExp}]});
+    }
+    if (approved) filter.push({approved});
+    if(minSalary)filter.push({salary:{$gte:minSalary}});
+    if(maxSalary)filter.push({salary:{$lte:maxSalary}});
+    const filterFind = { $and: filter };
     // יקבל רק את כמות הרשומות בקולקשן
-    const count = await JobModel.countDocuments()
+    const count = await JobModel.countDocuments(filterFind)
     res.json({ count, pages: Math.ceil(count / perPage) })
   }
   catch (err) {
