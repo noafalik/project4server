@@ -2,6 +2,7 @@ const express = require("express");
 const { JobModel, validateJob } = require("../models/jobModel");
 const router = express.Router();
 const { auth, authAdmin } = require("../middlewares/auth");
+const { CompanyModel } = require("../models/companyModel");
 
 router.get("/", async (req, res) => {
   const sort = req.query.sort || "_id";
@@ -30,11 +31,58 @@ router.get("/", async (req, res) => {
     }
     if (company_id) filter.push({ company_id });
     if (search) {
-      filter.push({$or:[{ job_title: searchExp }, {info:searchExp}]});
+      filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
-    if (approved) filter.push({approved});
-    if(minSalary)filter.push({salary:{$gte:minSalary}});
-    if(maxSalary)filter.push({salary:{$lte:maxSalary}});
+    if (approved) filter.push({ approved });
+    if (minSalary) filter.push({ salary: { $gte: minSalary } });
+    if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
+    const filterFind = { $and: filter };
+    let data = await JobModel
+      .find(filterFind)
+      .limit(perPage)
+      .skip(page * perPage)
+      .sort({ [sort]: reverse })
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/myJobs", auth, async (req, res) => {
+  const sort = req.query.sort || "_id";
+  const reverse = req.query.reverse == "yes" ? 1 : -1;
+  const category = req.query.category;
+  const location = req.query.location;
+  const visa = req.query.visa;
+  const minSalary = req.query.minSalary;
+  const maxSalary = req.query.maxSalary;
+  const approved = req.query.approved;
+  const search = req.query.s;
+  try {
+    const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
+    const company_id = company._id;
+    const page = req.query.page - 1 || 0;
+    const perPage = req.query.perPage || 5;
+    const searchExp = new RegExp(search, "i");
+    const filter = [];
+    filter.push({ company_id });
+    if (category) filter.push({ category });
+    if (location) {
+      const locationExp = new RegExp(location, "i");
+      filter.push({ location: locationExp })
+    }
+    if (visa) {
+      const visaExp = new RegExp(visa, "i");
+      filter.push({ visa: visaExp });
+    }
+    if (search) {
+      filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
+    }
+    if (approved) filter.push({ approved });
+    if (minSalary) filter.push({ salary: { $gte: minSalary } });
+    if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
     let data = await JobModel
       .find(filterFind)
@@ -86,11 +134,11 @@ router.get("/count", async (req, res) => {
     }
     if (company_id) filter.push({ company_id });
     if (search) {
-      filter.push({$or:[{ job_title: searchExp }, {info:searchExp}]});
+      filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
-    if (approved) filter.push({approved});
-    if(minSalary)filter.push({salary:{$gte:minSalary}});
-    if(maxSalary)filter.push({salary:{$lte:maxSalary}});
+    if (approved) filter.push({ approved });
+    if (minSalary) filter.push({ salary: { $gte: minSalary } });
+    if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
     // יקבל רק את כמות הרשומות בקולקשן
     const count = await JobModel.countDocuments(filterFind)
@@ -131,7 +179,9 @@ router.post("/", auth, async (req, res) => {
   if (req.tokenData.role == "company") {
     try {
       let job = new JobModel(req.body);
-      job.user_id = req.tokenData._id
+      const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
+      job.company_id = company._id;
+      job.approved = false;
       await job.save();
       res.json(job)
     }
@@ -155,11 +205,8 @@ router.put("/:id", auth, async (req, res) => {
     let data;
     // בודק אם המשתמש הוא אדמין ונותן לו אפשרות לערוך את
     // כל הרשומות גם כאלו שלא שלו
-    if (req.tokenData.role == "admin") {
-      data = await JobModelModel.updateOne({ _id: id }, req.body);
-    }
-    else if (req.tokenData.role == "company") {
-      data = await JobModel.updateOne({ _id: id, user_id: req.tokenData._id }, req.body);
+    if (req.tokenData.role == "company") {
+      data = await JobModel.updateOne({ _id: id }, req.body);
     }
     else {
       return res.status(400).json({ err: "You must be admin or company!" })

@@ -6,7 +6,7 @@ let schema = new mongoose.Schema({
     job_id: String,
     notes:String,
     starting: Date,
-    video_link:String
+    cv_link:String
 }, {timestamps:true})
 
 exports.ContenderModel = mongoose.model("contenders", schema)

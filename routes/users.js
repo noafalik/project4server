@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
 const { auth, authAdmin } = require("../middlewares/auth");
 const { validateJoi, UserModel, validateLogin, createToken } = require("../models/userModel");
+const { CompanyModel } = require("../models/companyModel");
 
 const router = express.Router();
 
@@ -102,8 +103,8 @@ router.post("/login", async (req, res) => {
     let token = createToken(user._id, user.role)
     // {token} -> {token:token } אם השם של המאפיין ומשתנה/פרמטר זהה אין צורך בנקודתיים
     // shotcut prop value
-    res.cookie('token', token, {httpOnly:true, sameSite:"lax"});
-    return res.status(200).json({message:"Logged in", login: true});
+    res.cookie('token', token, { httpOnly: true, sameSite: "lax" });
+    return res.status(200).json({ message: "Logged in", login: true });
   }
   catch (err) {
     console.log(err);
@@ -112,10 +113,10 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/logout", async (req, res) => {
-  
+
   try {
     res.clearCookie('token');
-    res.json({logout:true});
+    res.json({ logout: true });
   }
   catch (err) {
     console.log(err);
@@ -125,17 +126,19 @@ router.post("/logout", async (req, res) => {
 
 
 // patch -> עדכון מאפיין אחד ברשומה אחת
-router.patch("/changeRole/:id/:role", authAdmin, async (req, res) => {
+router.patch("/changeRole/:id", authAdmin, async (req, res) => {
   const id = req.params.id;
-  const newRole = req.params.role;
+  let newRole;
   try {
-    // 642297fa073568668885db3a -> איי די של הסופר אדמין
-    if (id == req.tokenData._id || id == "642297fa073568668885db3a") {
+    if (id == req.tokenData._id || id == "646b4d98c88bd4fd41edbaf0") {
       return res.status(401).json({ err: "You cant change your role! or the super admin" })
     }
+    const user = await UserModel.findOne({ _id: id });
+    if (user.role != "admin") newRole = "admin";
+    else if (await CompanyModel.findOne({user_id:id}))newRole="company";
+    else newRole="user";
     const data = await UserModel.updateOne({ _id: id }, { role: newRole })
     res.json(data);
-
   }
   catch (err) {
     console.log(err);

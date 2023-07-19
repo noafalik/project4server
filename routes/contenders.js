@@ -3,7 +3,7 @@ const { auth } = require("../middlewares/auth");
 const {ContenderModel, validateContender} = require("../models/contenderModel");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/",auth, async (req, res) => {
   const perPage = req.query.perPage || 5;
   const page = req.query.page - 1 || 0;
   const sort = req.query.sort || "_id";
