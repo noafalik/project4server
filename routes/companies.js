@@ -18,15 +18,18 @@ router.get("/companyInfo", auth, async (req, res) => {
   }
 })
 
-router.get("/companiesList", authAdmin, async (req, res) => {
+router.get("/companiesList", auth, async (req, res) => {
   try {
     let perPage = req.query.perPage || 5;
     let page = req.query.page - 1 || 0;
+    let company_id = req.query.id;
+    let filter = {};
+    if(company_id)filter={_id:company_id};
     let data = await CompanyModel
-      .find({})
+      .find(filter)
       .limit(perPage)
       .skip(page * perPage)
-      .sort({ _id: -1 })
+      .sort({ company_name:1 })
     res.json(data)
   }
   catch (err) {
