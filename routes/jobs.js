@@ -15,6 +15,8 @@ router.get("/", async (req, res) => {
   const approved = req.query.approved;
   const company_id = req.query.company_id;
   const search = req.query.s;
+  const id = req.query.id;
+
   try {
     const page = req.query.page - 1 || 0;
     const perPage = req.query.perPage || 5;
@@ -34,6 +36,7 @@ router.get("/", async (req, res) => {
       filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
     if (approved) filter.push({ approved });
+    if (id) filter.push({ _id:id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
@@ -60,6 +63,7 @@ router.get("/myJobs", auth, async (req, res) => {
   const maxSalary = req.query.maxSalary;
   const approved = req.query.approved;
   const search = req.query.s;
+  const id = req.query.id;
   try {
     const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
     const company_id = company._id;
@@ -81,6 +85,7 @@ router.get("/myJobs", auth, async (req, res) => {
       filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
     if (approved) filter.push({ approved });
+    if (id) filter.push({ _id:id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
@@ -120,6 +125,7 @@ router.get("/count", async (req, res) => {
     const company_id = req.query.company_id;
     const search = req.query.s;
     const page = req.query.page - 1 || 0;
+    const id = req.query.id;
     const perPage = req.query.perPage || 5;
     const searchExp = new RegExp(search, "i");
     const filter = [];
@@ -137,6 +143,7 @@ router.get("/count", async (req, res) => {
       filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
     if (approved) filter.push({ approved });
+    if (id) filter.push({ _id:id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };

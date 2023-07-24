@@ -28,6 +28,18 @@ router.get("/userInfo", auth, async (req, res) => {
   }
 })
 
+router.get("/single/:id", auth, async(req,res)=>{
+  try{
+    const id = req.params.id;
+    let data = await UserModel.findOne({_id:id}, {password:0});
+    res.json({full_name:data.full_name,email: data.email});
+  }
+  catch(err){
+    console.log(err);
+    res.status(502).json({err})
+  }
+})
+
 // authAdmin -> רק אדמין יוכל להגיע לראוט הנל
 router.get("/usersList", authAdmin, async (req, res) => {
   try {
@@ -180,7 +192,7 @@ router.patch("/updateRequest", auth, async (req, res) => {
 router.delete("/:id", authAdmin, async (req, res) => {
   try {
     let id = req.params.id;
-    if (id == req.tokenData._id || id == "642297fa073568668885db3a") {
+    if (id == req.tokenData._id || id == "646b5121c88bd4fd41edbaf8") {
       return res.status(401).json({ err: "You cant delete yourself or the super admin" });
     }
     let data = await UserModel.deleteOne({ _id: id });
