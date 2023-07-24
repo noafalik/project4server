@@ -61,7 +61,7 @@ router.get("/", auth, async (req, res) => {
 router.get("/single/:id", async (req, res) => {
   try {
     const id = req.params.id
-    let data = await VideoModel.findOne({ _id: id });
+    let data = await ContenderModel.findOne({ _id: id });
     res.json(data);
   }
   catch (err) {
