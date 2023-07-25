@@ -3,6 +3,7 @@ const { auth } = require("../middlewares/auth");
 const { ContenderModel, validateContender } = require("../models/contenderModel");
 const { UserModel } = require("../models/userModel");
 const { JobModel } = require("../models/jobModel");
+const { CompanyModel } = require("../models/companyModel");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
@@ -34,15 +35,15 @@ router.get("/", auth, async (req, res) => {
     }
     if (user_name) {
       const nameExp = new RegExp(user_name, "i")
-      const users = await UserModel.find({full_name:nameExp}, {_id:1});
+      const users = await UserModel.find({ full_name: nameExp }, { _id: 1 });
       const userIds = users.map((user) => user._id.toString());
-      filter.push({user_id:{$in:userIds}});
+      filter.push({ user_id: { $in: userIds } });
     }
     if (job_title) {
       const titleExp = new RegExp(job_title, "i")
-      const jobs = await JobModel.find({job_title:titleExp}, {_id:1});
+      const jobs = await JobModel.find({ job_title: titleExp }, { _id: 1 });
       const jobIds = jobs.map((job) => job._id.toString());
-      filter.push({job_id:{$in:jobIds}});
+      filter.push({ job_id: { $in: jobIds } });
     }
     const filterFind = { $and: filter };
     let data = await ContenderModel
@@ -154,13 +155,16 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     let id = req.params.id;
     let data;
-    // נותן אפשרות לאדמין למחוק את כל הרשומות
-    if (req.tokenData.role == "admin") {
+    const contender = await ContenderModel.findOne({ _id: id });
+    console.log(contender);
+    const job = await JobModel.findOne({ _id: contender.job_id });
+    console.log(job);
+    const company = await CompanyModel.findOne({ _id: job.company_id });
+    console.log(company);
+    if (req.tokenData._id == company.user_id) {
       data = await ContenderModel.deleteOne({ _id: id });
     }
-    else {
-      data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
-    }
+    else data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
     res.json(data)
   }
   catch (err) {
