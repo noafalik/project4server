@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const { auth, authAdmin } = require("../middlewares/auth");
 const { validateJoi, UserModel, validateLogin, createToken } = require("../models/userModel");
 const { CompanyModel } = require("../models/companyModel");
+const { ContenderModel } = require("../models/contenderModel");
+const { JobModel } = require("../models/jobModel");
 
 const router = express.Router();
 
@@ -28,15 +30,15 @@ router.get("/userInfo", auth, async (req, res) => {
   }
 })
 
-router.get("/single/:id", auth, async(req,res)=>{
-  try{
+router.get("/single/:id", auth, async (req, res) => {
+  try {
     const id = req.params.id;
-    let data = await UserModel.findOne({_id:id}, {password:0});
-    res.json({full_name:data.full_name,email: data.email});
+    let data = await UserModel.findOne({ _id: id }, { password: 0 });
+    res.json({ full_name: data.full_name, email: data.email });
   }
-  catch(err){
+  catch (err) {
     console.log(err);
-    res.status(502).json({err})
+    res.status(502).json({ err })
   }
 })
 
@@ -147,8 +149,8 @@ router.patch("/changeRole/:id", authAdmin, async (req, res) => {
     }
     const user = await UserModel.findOne({ _id: id });
     if (user.role != "admin") newRole = "admin";
-    else if (await CompanyModel.findOne({user_id:id}))newRole="company";
-    else newRole="user";
+    else if (await CompanyModel.findOne({ user_id: id })) newRole = "company";
+    else newRole = "user";
     const data = await UserModel.updateOne({ _id: id }, { role: newRole })
     res.json(data);
   }
@@ -196,6 +198,15 @@ router.delete("/:id", authAdmin, async (req, res) => {
       return res.status(401).json({ err: "You cant delete yourself or the super admin" });
     }
     let data = await UserModel.deleteOne({ _id: id });
+    const company = await CompanyModel.findOne({ user_id: id });
+    if (company) {
+      const jobs = await JobModel.find({company_id:company._id});
+      const jobsIds = jobs.map((job) => job._id.toString());
+      data.jobs = await JobModel.deleteMany({ company_id: (company._id.toString()) });
+      data.myContenders = await ContenderModel.deleteMany({job_id: { $in: jobsIds } });
+      data.company = await CompanyModel.deleteOne({ user_id: id });
+    }
+    else data.contenders = await ContenderModel.deleteMany({ user_id: id });
     res.json(data)
   }
   catch (err) {
