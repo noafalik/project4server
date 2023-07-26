@@ -190,21 +190,45 @@ router.put("/:id", auth, async (req, res) => {
 
 // increment - מעלה ב1
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/", auth, async (req, res) => {
+  const job_id = req.query.job_id;
+
+
+
   try {
-    let id = req.params.id;
-    let data;
-    const contender = await ContenderModel.findOne({ _id: id });
-    console.log(contender);
-    const job = await JobModel.findOne({ _id: contender.job_id });
-    console.log(job);
-    const company = await CompanyModel.findOne({ _id: job.company_id });
-    console.log(company);
-    if (req.tokenData._id == company.user_id) {
-      data = await ContenderModel.deleteOne({ _id: id });
+    if (job_id) {
+      let data;
+      const id = (req.tokenData._id).toString(); // Convert user ID to string
+
+      const dataContender = await ContenderModel.findOne({ user_id: id, job_id });
+
+      if (!dataContender) {
+        return res.status(404).json({ error: "Contender not found" });
+      }
+      if (req.tokenData.role === "admin") {
+        data = await ContenderModel.deleteOne({ _id: dataContender._id });
+      } else {
+        data = await ContenderModel.deleteOne({ _id: dataContender._id });
+      }
+
+      res.json(data);
     }
-    else data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
-    res.json(data)
+    else {
+      let id = req.query.id;
+      let data;
+      const contender = await ContenderModel.findOne({ _id: id });
+      console.log(contender);
+      const job = await JobModel.findOne({ _id: contender.job_id });
+      console.log(job);
+      const company = await CompanyModel.findOne({ _id: job.company_id });
+      console.log(company);
+      if (req.tokenData._id == company.user_id) {
+        data = await ContenderModel.deleteOne({ _id: id });
+      }
+      else data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
+      res.json(data)
+    }
+
   }
   catch (err) {
     console.log(err);
@@ -212,31 +236,28 @@ router.delete("/:id", auth, async (req, res) => {
   }
 })
 
-module.exports = router;
+// router.delete("/delete", auth, async (req, res) => {//?job_id
+//   const job_id = req.query.job_id;
 
-router.delete("/delete", auth, async (req, res) => {//?job_id
-  const job_id = req.query.job_id;
+//   try {
+//     let data;
+//     const id = (req.tokenData._id).toString(); // Convert user ID to string
 
-  try {
-    let data;
-    const id = (req.tokenData._id).toString(); // Convert user ID to string
+//     const dataContender = await ContenderModel.findOne({ user_id: id, job_id });
 
-    const dataContender = await ContenderModel.findOne({ user_id: id, job_id });
+//     if (!dataContender) {
+//       return res.status(404).json({ error: "Contender not found" });
+//     }
+//     if (req.tokenData.role === "admin") {
+//       data = await ContenderModel.deleteOne({ _id: dataContender._id });
+//     } else {
+//       data = await ContenderModel.deleteOne({ _id: dataContender._id });
+//     }
 
-    if (!dataContender) {
-      return res.status(404).json({ error: "Contender not found" });
-    }
-    if (req.tokenData.role === "admin") {
-      data = await ContenderModel.deleteOne({ _id: dataContender._id });
-    } else {
-      data = await ContenderModel.deleteOne({ _id: dataContender._id });
-    }
-
-    res.json(data);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
+//     res.json(data);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 module.exports = router;
