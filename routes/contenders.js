@@ -236,28 +236,4 @@ router.delete("/", auth, async (req, res) => {
   }
 })
 
-// router.delete("/delete", auth, async (req, res) => {//?job_id
-//   const job_id = req.query.job_id;
-
-//   try {
-//     let data;
-//     const id = (req.tokenData._id).toString(); // Convert user ID to string
-
-//     const dataContender = await ContenderModel.findOne({ user_id: id, job_id });
-
-//     if (!dataContender) {
-//       return res.status(404).json({ error: "Contender not found" });
-//     }
-//     if (req.tokenData.role === "admin") {
-//       data = await ContenderModel.deleteOne({ _id: dataContender._id });
-//     } else {
-//       data = await ContenderModel.deleteOne({ _id: dataContender._id });
-//     }
-
-//     res.json(data);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
 module.exports = router;
