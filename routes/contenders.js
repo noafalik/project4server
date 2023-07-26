@@ -34,15 +34,15 @@ router.get("/", auth, async (req, res) => {
     }
     if (user_name) {
       const nameExp = new RegExp(user_name, "i")
-      const users = await UserModel.find({full_name:nameExp}, {_id:1});
+      const users = await UserModel.find({ full_name: nameExp }, { _id: 1 });
       const userIds = users.map((user) => user._id.toString());
-      filter.push({user_id:{$in:userIds}});
+      filter.push({ user_id: { $in: userIds } });
     }
     if (job_title) {
       const titleExp = new RegExp(job_title, "i")
-      const jobs = await JobModel.find({job_title:titleExp}, {_id:1});
+      const jobs = await JobModel.find({ job_title: titleExp }, { _id: 1 });
       const jobIds = jobs.map((job) => job._id.toString());
-      filter.push({job_id:{$in:jobIds}});
+      filter.push({ job_id: { $in: jobIds } });
     }
     const filterFind = { $and: filter };
     let data = await ContenderModel
@@ -102,6 +102,22 @@ router.get("/count", async (req, res) => {
 })
 
 
+router.get("/exists", auth, async (req, res) => {
+  // ?job_id=&user_id=
+  const job_id = req.query.job_id;
+  // const user_id = req.query.user_id;
+
+  try {
+    let data = await ContenderModel.findOne({ user_id: req.tokenData._id, job_id });
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+
 // FOR TESTING IN QUERY IN MONGO
 // שאילתא טובה בשביל לשלוף מועדפים של משתמש, בנוסף מאפשר נניח לשלוף
 // רשימת וידיאו שאני רוצה לפרסם ביותר קלות ואפשרויות נוספות לשליפה כאשר יש לי צורך 
@@ -150,23 +166,49 @@ router.put("/:id", auth, async (req, res) => {
 
 // increment - מעלה ב1
 
-router.delete("/:id", auth, async (req, res) => {
+// router.delete("/:id", auth, async (req, res) => {
+//   try {
+//     let id = req.params.id;
+//     let data;
+//     // נותן אפשרות לאדמין למחוק את כל הרשומות
+//     if (req.tokenData.role == "admin") {
+//       data = await ContenderModel.deleteOne({ _id: id });
+//     }
+//     else {
+//       data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
+//     }
+//     res.json(data)
+//   }
+//   catch (err) {
+//     console.log(err);
+//     res.status(502).json({ err })
+//   }
+// })
+
+router.delete("/delete", auth, async (req, res) => {//?job_id
+  const job_id = req.query.job_id;
+
   try {
-    let id = req.params.id;
     let data;
-    // נותן אפשרות לאדמין למחוק את כל הרשומות
-    if (req.tokenData.role == "admin") {
-      data = await ContenderModel.deleteOne({ _id: id });
+    const id = (req.tokenData._id).toString(); // Convert user ID to string
+
+    const dataContender = await ContenderModel.findOne({ user_id: id, job_id });
+
+    if (!dataContender) {
+      return res.status(404).json({ error: "Contender not found" });
     }
-    else {
-      data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
+    if (req.tokenData.role === "admin") {
+      data = await ContenderModel.deleteOne({ _id: dataContender._id });
+    } else {
+      data = await ContenderModel.deleteOne({ _id: dataContender._id });
     }
-    res.json(data)
-  }
-  catch (err) {
+
+    res.json(data);
+  } catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ error: "Internal server error" });
   }
-})
+});
+
 
 module.exports = router;
