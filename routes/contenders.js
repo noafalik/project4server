@@ -3,6 +3,7 @@ const { auth } = require("../middlewares/auth");
 const { ContenderModel, validateContender } = require("../models/contenderModel");
 const { UserModel } = require("../models/userModel");
 const { JobModel } = require("../models/jobModel");
+const { CompanyModel } = require("../models/companyModel");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
@@ -18,6 +19,12 @@ router.get("/", auth, async (req, res) => {
   const job_title = req.query.job_title;
   try {
     let filter = [];
+    const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
+    if (company) {
+      const jobs = await JobModel.find({ company_id: company._id }, { _id: 1 });
+      const jobIds = jobs.map((job) => job._id.toString());
+      filter.push({ job_id: { $in: jobIds } });
+    }
     // בודק אם קיבלנו קווארי של קטגוריה ואם כן משנה את הפליטר של הפיינד
     // למציאת פריטים שקשורים לקגטוריה
     if (job_id) {
@@ -70,40 +77,57 @@ router.get("/single/:id", async (req, res) => {
   }
 })
 
-router.get("/count", async (req, res) => {
-  // ?user_id=
-  const user_id = req.query.user_id;
-  const search = req.query.s;
-  const job_id = req.query.job_id;
+router.get("/count", auth, async (req, res) => {
   try {
-    let filterFind = {}
-    // כדי לשלוף רק מספר רשומות של משתמש לפי איי די שלו שנשלח בקווארי
+    const job_id = req.query.job_id;
+    const user_id = req.query.user_id;
+    const search = req.query.s;
+    const user_name = req.query.user_name;
+    const job_title = req.query.job_title;
+    const perPage = req.query.perPage || 5;
+    const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
+    let filter = [];
+    if (company) {
+      const jobs = await JobModel.find({ company_id: company._id }, { _id: 1 });
+      const jobIds = jobs.map((job) => job._id.toString());
+      filter = [{ job_id: { $in: jobIds } }];
+    }
+    let filterFind = {}; // Initialize the default filter
+
+    if (job_id) {
+      filter.push({ job_id: job_id });
+    }
     if (user_id) {
-      // filterFind = {user_id:user_id}
-      filterFind = { user_id }
+      filter.push({ user_id });
     }
-    else if (search) {
-      const searchExp = new RegExp(search, "i")
-      // מחפש את הביטוי או בטייטל או באינפו של הרשומות
-      filterFind = { notes: searchExp };
+    if (search) {
+      const searchExp = new RegExp(search, "i");
+      filter.push({ notes: searchExp });
     }
-    else if (job_id) {
-      filterFind = { job_id: job_id }
+    if (user_name) {
+      const nameExp = new RegExp(user_name, "i");
+      const users = await UserModel.find({ full_name: nameExp }, { _id: 1 });
+      const userIds = users.map((user) => user._id.toString());
+      filter.push({ user_id: { $in: userIds } });
     }
-    let perPage = req.query.perPage || 5;
-    // יקבל רק את כמות הרשומות בקולקשן
-    const count = await ContenderModel.countDocuments(filterFind)
-    res.json({ count, pages: Math.ceil(count / perPage) })
-  }
-  catch (err) {
+    if (job_title) {
+      const titleExp = new RegExp(job_title, "i");
+      const jobs = await JobModel.find({ job_title: titleExp }, { _id: 1 });
+      const jobIds = jobs.map((job) => job._id.toString());
+      filter.push({ job_id: { $in: jobIds } });
+    }
+    filterFind.$and = filter;
+    const count = await ContenderModel.countDocuments(filterFind);
+    res.json({ count, pages: Math.ceil(count / perPage) });
+  } catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(502).json({ err });
   }
-})
+});
 
 
 router.get("/exists", auth, async (req, res) => {
-  // ?job_id=&user_id=
+  // ?job_id=
   const job_id = req.query.job_id;
   // const user_id = req.query.user_id;
 
@@ -166,24 +190,29 @@ router.put("/:id", auth, async (req, res) => {
 
 // increment - מעלה ב1
 
-// router.delete("/:id", auth, async (req, res) => {
-//   try {
-//     let id = req.params.id;
-//     let data;
-//     // נותן אפשרות לאדמין למחוק את כל הרשומות
-//     if (req.tokenData.role == "admin") {
-//       data = await ContenderModel.deleteOne({ _id: id });
-//     }
-//     else {
-//       data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
-//     }
-//     res.json(data)
-//   }
-//   catch (err) {
-//     console.log(err);
-//     res.status(502).json({ err })
-//   }
-// })
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data;
+    const contender = await ContenderModel.findOne({ _id: id });
+    console.log(contender);
+    const job = await JobModel.findOne({ _id: contender.job_id });
+    console.log(job);
+    const company = await CompanyModel.findOne({ _id: job.company_id });
+    console.log(company);
+    if (req.tokenData._id == company.user_id) {
+      data = await ContenderModel.deleteOne({ _id: id });
+    }
+    else data = await ContenderModel.deleteOne({ _id: id, user_id: req.tokenData._id });
+    res.json(data)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+module.exports = router;
 
 router.delete("/delete", auth, async (req, res) => {//?job_id
   const job_id = req.query.job_id;
@@ -209,6 +238,5 @@ router.delete("/delete", auth, async (req, res) => {//?job_id
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 module.exports = router;
