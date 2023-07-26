@@ -124,7 +124,6 @@ router.get("/count", async (req, res) => {
     const approved = req.query.approved;
     const company_id = req.query.company_id;
     const search = req.query.s;
-    const page = req.query.page - 1 || 0;
     const id = req.query.id;
     const perPage = req.query.perPage || 5;
     const searchExp = new RegExp(search, "i");

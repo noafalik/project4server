@@ -11,7 +11,9 @@ let schema = new mongoose.Schema({
     approved: {
         type: Boolean, default: false
     },
-    visa: String,
+    visa:{
+        type: Boolean, default: false
+    },
     img_url: String,
     continent: String,
 }, { timestamps: true })
