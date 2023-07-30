@@ -65,6 +65,27 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
+router.get("/jobslist", async (req, res) => {
+  const user_id = req.query.user_id; // Get user_id from the query
+
+  try {
+    // Find all contenders with the specified user_id
+    const contenders = await ContenderModel.find({ user_id });
+
+    // Get an array of job_ids from the contenders collection
+    const jobIds = contenders.map(contender => contender.job_id);
+
+    // Find all jobs with _id in the array of job_ids
+    const jobs = await JobModel.find({ _id: { $in: jobIds } });
+
+    // Return the combined data in the response
+    res.json(jobs);
+  } catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+});
+
 router.get("/single/:id", async (req, res) => {
   try {
     const id = req.params.id
