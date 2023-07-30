@@ -4,7 +4,82 @@ const router = express.Router();
 const { auth, authAdmin } = require("../middlewares/auth");
 const { CompanyModel } = require("../models/companyModel");
 
-router.get("/", async (req, res) => {
+const matchLevel = (params, job) => {
+  let matchCounter = 0;
+  for (const key in params) {
+    if (key == "salary") {
+      if (job["salary"] >= params["salary"]) matchCounter++;
+    }
+    else {
+      if (params[key] == job[key]) {
+        matchCounter++;
+      }
+    }
+  }
+  return matchCounter;
+}
+
+// router.get("/match", async (req, res) => {
+//   const category = req.query.category;
+//   const location = req.query.location;
+//   const visa = req.query.visa;
+//   const salary = req.query.salary;
+//   const continent = req.query.continent;
+//   try {
+//     let params = {};
+//     if (category) params.category = category;
+//     if (location) {
+//       params.location = location;
+//     }
+//     if (visa) {
+//       if(visa=="true") params.visa = true;
+//       else params.visa = false;
+//     }
+//     if (salary) params.salary = salary;
+//     if (continent) params.continent = continent;
+//     console.log(params);
+//     const jobs = await JobModel.find({});
+//     jobs.sort((a, b) => matchLevel(params, b) - matchLevel(params, a));
+//     jobs.forEach(item => console.log(item.job_title,matchLevel(params, item)))
+//     res.json(jobs);
+//   }
+//   catch (err) {
+//     console.log(err);
+//     res.status(502).json({ err })
+//   }
+// })
+
+router.get("/match", async (req, res) => {
+  const category = req.query.category;
+  const location = req.query.location;
+  const visa = req.query.visa;
+  const salary = req.query.salary;
+  const continent = req.query.continent;
+  try {
+    let params = {};
+    if (category) params.category = category;
+    if (location) {
+      params.location = location;
+    }
+    if (visa) {
+      if (visa == "true") params.visa = true;
+      else params.visa = false;
+    }
+    if (salary) params.salary = salary;
+    if (continent) params.continent = continent;
+    const jobs = await JobModel.find({});
+    const jobsFive = jobs.filter(a => matchLevel(params, a) == 5);
+    const jobsFour = jobs.filter(a => matchLevel(params, a) == 4);
+    const jobsThree = jobs.filter(a => matchLevel(params, a) == 3);
+    res.json({ jobsFive, jobsFour, jobsThree });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/", auth, async (req, res) => {
   const sort = req.query.sort || "_id";
   const reverse = req.query.reverse == "yes" ? 1 : -1;
   const category = req.query.category;
@@ -36,7 +111,7 @@ router.get("/", async (req, res) => {
       filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
     if (approved) filter.push({ approved });
-    if (id) filter.push({ _id:id });
+    if (id) filter.push({ _id: id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
@@ -46,6 +121,19 @@ router.get("/", async (req, res) => {
       .skip(page * perPage)
       .sort({ [sort]: reverse })
     res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/locations", auth, async (req, res) => {
+  try {
+    const jobs = await JobModel.find({});
+    const locations = [];
+    jobs.forEach(item => locations.push(item.location));
+    res.json(locations);
   }
   catch (err) {
     console.log(err);
@@ -85,7 +173,7 @@ router.get("/myJobs", auth, async (req, res) => {
       filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
     if (approved) filter.push({ approved });
-    if (id) filter.push({ _id:id });
+    if (id) filter.push({ _id: id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
@@ -142,7 +230,7 @@ router.get("/count", async (req, res) => {
       filter.push({ $or: [{ job_title: searchExp }, { info: searchExp }] });
     }
     if (approved) filter.push({ approved });
-    if (id) filter.push({ _id:id });
+    if (id) filter.push({ _id: id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
     const filterFind = { $and: filter };
