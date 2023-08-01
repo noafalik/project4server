@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const { UserModel } = require("./userModel");
 
 let schema = new mongoose.Schema({
-    user_id: String,
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     company_name: String,
     contactPhone:String,
     logo_url:String,
