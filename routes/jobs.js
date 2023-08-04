@@ -79,7 +79,7 @@ router.get("/match", async (req, res) => {
   }
 })
 
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   const sort = req.query.sort || "_id";
   const reverse = req.query.reverse == "yes" ? 1 : -1;
   const category = req.query.category;
@@ -312,6 +312,7 @@ router.put("/:id", auth, async (req, res) => {
     res.status(502).json({ err })
   }
 })
+
 router.patch("/changeApproval/:id/:approved", authAdmin, async (req, res) => {
   const id = req.params.id;
   const approved = req.params.approved;
@@ -337,7 +338,9 @@ router.delete("/:id", auth, async (req, res) => {
       data = await JobModel.deleteOne({ _id: id });
     }
     else {
-      data = await JobModel.deleteOne({ _id: id, user_id: req.tokenData._id });
+      const job = await JobModel.findOne({_id:id}).populate('company_id');
+      if(job.company_id.user_id = req.tokenData._id)
+      data = await JobModel.deleteOne({ _id: id});
     }
     res.json(data)
   }

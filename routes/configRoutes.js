@@ -5,7 +5,7 @@ const contendersR = require("./contenders");
 const companiesR = require("./companies");
 const commentsR = require("./comments");
 const categoriesR = require("./categories");
-
+const uploadR = require("./upload");
 
 
 
@@ -18,7 +18,7 @@ exports.routesInit = (app) => {
   app.use("/companies",companiesR);
   app.use("/comments",commentsR);
   app.use("/categories",categoriesR);
-
+  app.use("/upload", uploadR);
 
 
   //show 404 routes

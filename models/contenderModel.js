@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const { UserModel } = require("./userModel");
+const { JobModel } = require("./jobModel");
 
 let schema = new mongoose.Schema({
-  user_id: String,
-  job_id: String,
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+  job_id: { type: mongoose.Schema.Types.ObjectId, ref: 'jobs' },
   notes: String,
   starting: Date,
   cv_link: String,

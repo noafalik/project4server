@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const { UserModel } = require("./userModel");
 
 let schema = new mongoose.Schema({
-    user_id: String,
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     content: String,
     date_created: {
         type: Date, default: Date.now

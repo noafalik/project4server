@@ -6,6 +6,8 @@ require("dotenv").config();
 
 exports.config = {
   mongoUrl:process.env.URLDB,
-  tokenSecret:process.env.TOKENSECRET
-  
+  tokenSecret:process.env.TOKENSECRET,
+  cloudName:process.env.CLOUDNAME,
+  apiKey:process.env.APIKEY,
+  apiSecret:process.env.APISECRET
 }

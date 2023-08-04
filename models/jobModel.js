@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const { CompanyModel } = require("./companyModel");
 
 let schema = new mongoose.Schema({
     job_title: String,
-    company_id: String,
+    company_id: { type: mongoose.Schema.Types.ObjectId, ref: 'companies' },
     category: String,
     info: String,
     salary: Number,
@@ -16,8 +17,9 @@ let schema = new mongoose.Schema({
     },
     img_url: String,
     continent: String,
-}, { timestamps: true })
-exports.JobModel = mongoose.model("jobs", schema)
+}, { timestamps: true });
+
+exports.JobModel = mongoose.model("jobs", schema);
 
 exports.validateJob = (_reqBody) => {
     return Joi.object({
