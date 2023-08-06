@@ -4,6 +4,7 @@ const { ContenderModel, validateContender } = require("../models/contenderModel"
 const { UserModel } = require("../models/userModel");
 const { JobModel } = require("../models/jobModel");
 const { CompanyModel } = require("../models/companyModel");
+const { ObjectID, ObjectId } = require("bson");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
@@ -115,7 +116,7 @@ router.get("/myContenders", auth, async (req, res) => {
       .find(filterFind)
       .limit(perPage)
       .skip(page * perPage)
-      .sort({ [sort]: reverse }).populate({path:'user_id', select:'full_name'}).populate({path:'job_id', select:'job_title'});
+      .sort({ [sort]: reverse }).populate({ path: 'user_id', select: 'full_name' }).populate({ path: 'job_id', select: 'job_title' });
     res.json(data);
   }
   catch (err) {
@@ -234,7 +235,9 @@ router.post("/", auth, async (req, res) => {
   }
   try {
     let contender = new ContenderModel(req.body);
-    contender.user_id = req.tokenData._id
+    contender.user_id = new ObjectId(req.tokenData._id);
+    const job_id = contender.job_id;
+    contender.job_id = new ObjectID(job_id);
     await contender.save();
     res.json(contender)
   }
