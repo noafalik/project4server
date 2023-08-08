@@ -5,6 +5,7 @@ const cors  = require("cors");
 const cookieParser = require("cookie-parser");
 const upload = require("express-fileupload");
 const {routesInit} = require("./routes/configRoutes");
+
 // התחברות למסד 
 require("./db/mongoConnect");
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(express.json({limit:'5mb'}));
 // להגדיר תיקייה סטטית שתיהיה התיקייה בשם פאבליק
 app.use(express.static(path.join(__dirname,"public")));
+
 
 routesInit(app);
 
