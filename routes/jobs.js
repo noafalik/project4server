@@ -130,6 +130,7 @@ router.get("/", async (req, res) => {
 
 router.get("/locations", auth, async (req, res) => {
   try {
+    // let perPage = req.query.perPage || 5;
     const jobs = await JobModel.find({});
     const locations = [];
     jobs.forEach(item => locations.push(item.location));

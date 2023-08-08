@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
 const { auth, authAdmin } = require("../middlewares/auth");
-const { validateJoi, UserModel, validateLogin, createToken } = require("../models/userModel");
+const { validateJoi, UserModel, validateLogin, createToken, validateUser } = require("../models/userModel");
 const { CompanyModel } = require("../models/companyModel");
 const { ContenderModel } = require("../models/contenderModel");
 const { JobModel } = require("../models/jobModel");
@@ -138,6 +138,30 @@ router.post("/logout", async (req, res) => {
   }
 })
 
+router.put("/:id", auth, async (req, res) => {
+  let validBody = validateUser(req.body);
+  if (validBody.error) {
+    return res.status(400).json(validBody.error.details);
+  }
+  try {
+    let id = req.params.id;
+    let data;
+    // בודק אם המשתמש הוא אדמין ונותן לו אפשרות לערוך את
+    // כל הרשומות גם כאלו שלא שלו
+    if (req.tokenData.role == "admin") {
+      data = await UserModel.updateOne({ _id: id }, req.body);
+    }
+    else {
+      data = await UserModel.updateOne({ _id: id }, req.body);
+    }
+    res.json(data)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 
 // patch -> עדכון מאפיין אחד ברשומה אחת
 router.patch("/changeRole/:id", authAdmin, async (req, res) => {
@@ -177,20 +201,21 @@ router.patch("/updateFav", auth, async (req, res) => {
   }
 })
 
-router.patch("/updateRequest", auth, async (req, res) => {
+router.patch("/updateMatch", auth, async (req, res) => {
   try {
-    const favs_ar = req.body.request_ar;
-    if (!Array.isArray(request_ar)) {
-      return res.status(400).json({ err: "You must send requaet_ar prop of array of ids" })
+    const newMatchUrl = req.body.match_url; // Assuming the new match URL is sent in the request body
+    
+    if (typeof newMatchUrl !== "string") {
+      return res.status(400).json({ err: "newMatchUrl must be a string" });
     }
-    const data = await UserModel.updateOne({ _id: req.tokenData._id }, { request_ar })
+    
+    const data = await UserModel.updateOne({ _id: req.tokenData._id }, { match_url: newMatchUrl });
     res.json(data);
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(502).json({ err });
   }
-})
+});
 
 router.delete("/:id", authAdmin, async (req, res) => {
   try {
