@@ -12,9 +12,7 @@ let schema = new mongoose.Schema({
   gender: String,
   profile_pic: String,
   CV_link:String,
-  request_jobs: {
-    type: Array, default: []
-  },
+  match_url: String,
   role: {
     type: String, default: "user"
   },
@@ -36,7 +34,8 @@ exports.validateJoi = (_reqBody) => {
     email: Joi.string().min(1).max(300).email().required(),
     birth_date: Joi.date().required(),
     password: Joi.string().min(1).max(100).required(),
-    gender:Joi.string().min(1).max(1).allow("",null)
+    gender:Joi.string().min(1).max(1).allow("",null),
+    CV_link:Joi.string().min(5).max(400).allow("",null)
   })
   return joiSchema.validate(_reqBody)
 }
@@ -45,6 +44,17 @@ exports.validateLogin = (_reqBody) => {
   let joiSchema = Joi.object({
     email: Joi.string().min(1).max(300).email().required(),
     password: Joi.string().min(1).max(100).required(),
+  })
+  return joiSchema.validate(_reqBody)
+}
+
+exports.validateUser = (_reqBody) => {
+  let joiSchema = Joi.object({
+    full_name: Joi.string().min(2).max(200).required(),
+    email: Joi.string().min(1).max(300).email().required(),
+    birth_date: Joi.date().required(),
+    gender:Joi.string().min(1).max(1).allow("",null),
+    CV_link:Joi.string().min(5).max(400).allow("",null)
   })
   return joiSchema.validate(_reqBody)
 }
