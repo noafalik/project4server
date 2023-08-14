@@ -169,13 +169,30 @@ router.patch("/changeRole/:id", authAdmin, async (req, res) => {
   let newRole;
   try {
     if (id == req.tokenData._id || id == "646b4d98c88bd4fd41edbaf0") {
-      return res.status(401).json({ err: "You cant change your role! or the super admin" })
+      return res.status(401).json({ err: "You cant change your role! U are the super admin" })
     }
     const user = await UserModel.findOne({ _id: id });
     if (user.role != "admin") newRole = "admin";
     else if (await CompanyModel.findOne({ user_id: id })) newRole = "company";
     else newRole = "user";
     const data = await UserModel.updateOne({ _id: id }, { role: newRole })
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+
+})
+
+
+router.patch("/changeRoleToCompany", auth, async (req, res) => {
+  const id = req.tokenData._id;
+  try {
+    if ( id == "646b4d98c88bd4fd41edbaf0") {
+      return res.status(401).json({ err: "You cant change your role! U are the super admin" })
+    }
+    const data = await UserModel.updateOne({ _id: id }, { role: "company" })
     res.json(data);
   }
   catch (err) {
