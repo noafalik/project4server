@@ -5,14 +5,11 @@ const { UserModel } = require("./userModel");
 let schema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     content: String,
-    date_created: {
-        type: Date, default: Date.now
-    },
     stars: Number,
     likes: {
         type: Array, default: []
     }
-})
+}, {timestamps:true})
 exports.CommentModel = mongoose.model("comments", schema)
 
 exports.validateComment = (_reqBody) => {
