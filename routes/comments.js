@@ -4,7 +4,7 @@ const { CommentModel, validateComment } = require("../models/commentModel");
 const { auth } = require("../middlewares/auth");
 
 router.get("/", async (req, res) => {
-  const perPage = req.query.perPage || 4;
+  const perPage = req.query.perPage || 10;
   const page = req.query.page - 1 || 0;
   const user_id = req.query.user_id;
 
@@ -16,8 +16,10 @@ router.get("/", async (req, res) => {
       filterFind = { user_id }
     }
     let data = await CommentModel.find(filterFind)
+      .populate('user_id')
       .limit(perPage)
       .skip(page * perPage)
+      .sort({user_id:1})
     res.json(data);
   }
   catch (err) {
@@ -62,11 +64,11 @@ router.patch("/inc/:id", auth, async (req, res) => {
       const index = comment.likes.indexOf(req.tokenData._id);
       comment.likes.splice(index, 1);
     }
-    
+
     // Save the updated comment
     const updatedComment = await comment.save();
 
-    res.json(comment.likes.length);
+    res.json(updatedComment);
   }
   catch (err) {
     console.log(err);
