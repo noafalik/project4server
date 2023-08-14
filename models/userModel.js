@@ -36,8 +36,9 @@ exports.validateJoi = (_reqBody) => {
     birth_date: Joi.date().required(),
     password: Joi.string().min(1).max(100).required(),
     gender:Joi.string().min(1).max(1).allow("",null), 
-    CV_link: Joi.string().min(5).max(400).allow("", null).default(""),
-    linkedIn_url: Joi.string().min(5).max(400).allow("", null).default("")
+    CV_link: Joi.string().min(5).max(400).allow("", null),
+    linkedIn_url: Joi.string().min(5).max(400).allow("", null),
+    match_url: Joi.string().min(5).max(400).allow("", null)
   })
   return joiSchema.validate(_reqBody)
 }
@@ -57,7 +58,8 @@ exports.validateUser = (_reqBody) => {
     birth_date: Joi.date().required(),
     gender:Joi.string().min(1).max(1).allow("",null),
     CV_link:Joi.string().min(5).max(400).allow("",null),
-    linkedIn_url:Joi.string().min(5).max(450).allow("",null)
+    linkedIn_url:Joi.string().min(5).max(450).allow("",null),
+    match_url: Joi.string().min(5).max(400).allow("", null)
   })
   return joiSchema.validate(_reqBody)
 }
