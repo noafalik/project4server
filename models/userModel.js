@@ -13,6 +13,7 @@ let schema = new mongoose.Schema({
   profile_pic: String,
   CV_link:String,
   match_url: String,
+  linkedIn_url: String,
   role: {
     type: String, default: "user"
   },
@@ -34,8 +35,9 @@ exports.validateJoi = (_reqBody) => {
     email: Joi.string().min(1).max(300).email().required(),
     birth_date: Joi.date().required(),
     password: Joi.string().min(1).max(100).required(),
-    gender:Joi.string().min(1).max(1).allow("",null),
-    CV_link:Joi.string().min(5).max(400).allow("",null)
+    gender:Joi.string().min(1).max(1).allow("",null), 
+    CV_link: Joi.string().min(5).max(400).allow("", null).default(""),
+    linkedIn_url: Joi.string().min(5).max(400).allow("", null).default("")
   })
   return joiSchema.validate(_reqBody)
 }
@@ -54,7 +56,8 @@ exports.validateUser = (_reqBody) => {
     email: Joi.string().min(1).max(300).email().required(),
     birth_date: Joi.date().required(),
     gender:Joi.string().min(1).max(1).allow("",null),
-    CV_link:Joi.string().min(5).max(400).allow("",null)
+    CV_link:Joi.string().min(5).max(400).allow("",null),
+    linkedIn_url:Joi.string().min(5).max(450).allow("",null)
   })
   return joiSchema.validate(_reqBody)
 }
