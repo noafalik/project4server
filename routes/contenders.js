@@ -116,7 +116,7 @@ router.get("/myContenders", auth, async (req, res) => {
       .find(filterFind)
       .limit(perPage)
       .skip(page * perPage)
-      .sort({ [sort]: reverse }).populate({ path: 'user_id', select: 'full_name' }).populate({ path: 'job_id', select: 'job_title' });
+      .sort({ [sort]: reverse }).populate({ path: 'user_id', select: {'full_name':1,'CV_link':1 }}).populate({ path: 'job_id', select: 'job_title' });
     res.json(data);
   }
   catch (err) {

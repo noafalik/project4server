@@ -19,36 +19,6 @@ const matchLevel = (params, job) => {
   return matchCounter;
 }
 
-// router.get("/match", async (req, res) => {
-//   const category = req.query.category;
-//   const location = req.query.location;
-//   const visa = req.query.visa;
-//   const salary = req.query.salary;
-//   const continent = req.query.continent;
-//   try {
-//     let params = {};
-//     if (category) params.category = category;
-//     if (location) {
-//       params.location = location;
-//     }
-//     if (visa) {
-//       if(visa=="true") params.visa = true;
-//       else params.visa = false;
-//     }
-//     if (salary) params.salary = salary;
-//     if (continent) params.continent = continent;
-//     console.log(params);
-//     const jobs = await JobModel.find({});
-//     jobs.sort((a, b) => matchLevel(params, b) - matchLevel(params, a));
-//     jobs.forEach(item => console.log(item.job_title,matchLevel(params, item)))
-//     res.json(jobs);
-//   }
-//   catch (err) {
-//     console.log(err);
-//     res.status(502).json({ err })
-//   }
-// })
-
 router.get("/match", async (req, res) => {
   const category = req.query.category;
   const location = req.query.location;
@@ -84,6 +54,7 @@ router.get("/", async (req, res) => {
   const reverse = req.query.reverse == "yes" ? 1 : -1;
   const category = req.query.category;
   const location = req.query.location;
+  const continent = req.query.continent;
   const visa = req.query.visa;
   const minSalary = req.query.minSalary;
   const maxSalary = req.query.maxSalary;
@@ -114,6 +85,7 @@ router.get("/", async (req, res) => {
     if (id) filter.push({ _id: id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
+    if (continent) filter.push({ continent })
     const filterFind = { $and: filter };
     let data = await JobModel
       .find(filterFind)
@@ -153,6 +125,7 @@ router.get("/myJobs", auth, async (req, res) => {
   const approved = req.query.approved;
   const search = req.query.s;
   const id = req.query.id;
+  const continent = req.query.continent;
   try {
     const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
     const company_id = company._id;
@@ -177,6 +150,7 @@ router.get("/myJobs", auth, async (req, res) => {
     if (id) filter.push({ _id: id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
+    if (continent) filter.push({ continent });
     const filterFind = { $and: filter };
     let data = await JobModel
       .find(filterFind)
@@ -215,6 +189,7 @@ router.get("/count", async (req, res) => {
     const search = req.query.s;
     const id = req.query.id;
     const perPage = req.query.perPage || 5;
+    const continent = req.query.continent;
     const searchExp = new RegExp(search, "i");
     const filter = [];
     if (category) filter.push({ category });
@@ -234,6 +209,7 @@ router.get("/count", async (req, res) => {
     if (id) filter.push({ _id: id });
     if (minSalary) filter.push({ salary: { $gte: minSalary } });
     if (maxSalary) filter.push({ salary: { $lte: maxSalary } });
+    if (continent) filter.push({ continent });
     const filterFind = { $and: filter };
     // יקבל רק את כמות הרשומות בקולקשן
     const count = await JobModel.countDocuments(filterFind)
@@ -339,9 +315,9 @@ router.delete("/:id", auth, async (req, res) => {
       data = await JobModel.deleteOne({ _id: id });
     }
     else {
-      const job = await JobModel.findOne({_id:id}).populate('company_id');
-      if(job.company_id.user_id = req.tokenData._id)
-      data = await JobModel.deleteOne({ _id: id});
+      const job = await JobModel.findOne({ _id: id }).populate('company_id');
+      if (job.company_id.user_id = req.tokenData._id)
+        data = await JobModel.deleteOne({ _id: id });
     }
     res.json(data)
   }
