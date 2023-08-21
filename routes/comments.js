@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
       .populate('user_id')
       .limit(perPage)
       .skip(page * perPage)
-      .sort({stars:-1})
+      .sort({createdAt:-1})
     res.json(data);
   }
   catch (err) {
