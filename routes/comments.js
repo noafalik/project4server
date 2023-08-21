@@ -4,7 +4,7 @@ const { CommentModel, validateComment } = require("../models/commentModel");
 const { auth } = require("../middlewares/auth");
 
 router.get("/", async (req, res) => {
-  const perPage = req.query.perPage || 10;
+  const perPage = req.query.perPage || 5;
   const page = req.query.page - 1 || 0;
   const user_id = req.query.user_id;
 
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
       .populate('user_id')
       .limit(perPage)
       .skip(page * perPage)
-      .sort({user_id:1})
+      .sort({stars:-1})
     res.json(data);
   }
   catch (err) {

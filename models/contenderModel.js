@@ -7,8 +7,7 @@ let schema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
   job_id: { type: mongoose.Schema.Types.ObjectId, ref: 'jobs' },
   notes: String,
-  starting: Date,
-  cv_link: String,
+  starting: Date
 }, { timestamps: true });
 
 exports.ContenderModel = mongoose.model("contenders", schema);
@@ -18,7 +17,6 @@ exports.validateContender = (_reqBody) => {
     user_id: Joi.string().required(),
     job_id: Joi.string().required(),
     notes: Joi.string().min(2).max(500).required(),
-    starting: Joi.date().required(),
-    cv_link: Joi.string().allow(null,""), // Add validation for cv_link
+    starting: Joi.date().required() // Add validation for cv_link
   }).validate(_reqBody);
 };

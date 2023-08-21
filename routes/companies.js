@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 const { auth, authAdmin } = require("../middlewares/auth");
 const { CompanyModel, validateCompany } = require("../models/companyModel");
+const { UserModel } = require("../models/userModel");
+const { JobModel } = require("../models/jobModel");
+const { ContenderModel } = require("../models/contenderModel");
 
-router.get("/", async(req,res) => {
-  res.json({msg:"companies work"});
+router.get("/", async (req, res) => {
+  res.json({ msg: "companies work" });
 })
 
 router.get("/companyInfo", auth, async (req, res) => {
@@ -24,12 +27,12 @@ router.get("/companiesList", auth, async (req, res) => {
     let page = req.query.page - 1 || 0;
     let company_id = req.query.id;
     let filter = {};
-    if(company_id)filter={_id:company_id};
+    if (company_id) filter = { _id: company_id };
     let data = await CompanyModel
       .find(filter)
       .limit(perPage)
       .skip(page * perPage)
-      .sort({ company_name:1 })
+      .sort({ user_id: -1 })
     res.json(data)
   }
   catch (err) {
@@ -51,14 +54,14 @@ router.get("/count", async (req, res) => {
   }
 })
 
-router.post("/",auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   let validBody = validateCompany(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
   }
   try {
     let company = new CompanyModel(req.body);
-    company.user_id=req.tokenData._id;
+    company.user_id = req.tokenData._id;
     // הצפנה של הסיסמא
     await company.save();
     // דואג שהצד לקוח לא ידע כלל איך אנחנו מצפינים את הסיסמא במסד
@@ -101,10 +104,16 @@ router.put("/:id", auth, async (req, res) => {
 router.delete("/:id", authAdmin, async (req, res) => {
   try {
     let id = req.params.id;
-    if (id == req.tokenData._id || id == "66666") {
+    let company = await CompanyModel.findOne({ _id: id }).populate('user_id');
+    if (company.user_id == req.tokenData._id || company.user_id == "646b5121c88bd4fd41edbaf8") {
       return res.status(401).json({ err: "You cant delete yourself or the super admin" });
     }
     let data = await CompanyModel.deleteOne({ _id: id });
+    data.user = await UserModel.deleteOne({ _id: company.user_id });
+    data.jobs = await JobModel.deleteMany({ company_id: id });
+    const jobs = await JobModel.find({ company_id: id });
+    const jobsIds = jobs.map((job) => job._id.toString());
+    data.myContenders = await ContenderModel.deleteMany({ job_id: { $in: jobsIds } });
     res.json(data)
   }
   catch (err) {
