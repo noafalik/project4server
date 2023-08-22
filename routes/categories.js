@@ -8,8 +8,8 @@ router.get("/", async (req, res) => {
     let perPage = req.query.perPage || 5;
     let page = req.query.page - 1 || 0;
     let data = await CategoryModel.find({}).limit(20)
-    .skip(page * perPage)
-    .sort({ _id: -1 })
+      .skip(page * perPage)
+      .sort({ category_name: 1 })
     res.json(data);
   }
   catch (err) {
@@ -43,7 +43,7 @@ router.get("/count", async (req, res) => {
   }
 })
 
-router.post("/",authAdmin, async (req, res) => {
+router.post("/", authAdmin, async (req, res) => {
   let validBody = validateCategory(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -59,7 +59,7 @@ router.post("/",authAdmin, async (req, res) => {
   }
 })
 
-router.put("/:id",authAdmin, async (req, res) => {
+router.put("/:id", authAdmin, async (req, res) => {
   let validBody = validateCategory(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -75,7 +75,7 @@ router.put("/:id",authAdmin, async (req, res) => {
   }
 })
 
-router.delete("/:id",authAdmin, async (req, res) => {
+router.delete("/:id", authAdmin, async (req, res) => {
   try {
     let id = req.params.id;
     let data = await CategoryModel.deleteOne({ _id: id });
