@@ -33,8 +33,8 @@ router.get("/userInfo", auth, async (req, res) => {
 router.get("/single/:id", auth, async (req, res) => {
   try {
     const id = req.params.id;
-    let data = await UserModel.findOne({ _id: id }, { password: 0 });
-    res.json({ full_name: data.full_name, email: data.email });
+    let data = await UserModel.findOne({ _id: id }, {email: 1, full_name: 1, linkedIn_url: 1, CV_link: 1 , _id:0});
+    res.json(data);
   }
   catch (err) {
     console.log(err);
@@ -189,7 +189,7 @@ router.patch("/changeRole/:id", authAdmin, async (req, res) => {
 router.patch("/changeRoleToCompany", auth, async (req, res) => {
   const id = req.tokenData._id;
   try {
-    if ( id == "646b4d98c88bd4fd41edbaf0") {
+    if (id == "646b4d98c88bd4fd41edbaf0") {
       return res.status(401).json({ err: "You cant change your role! U are the super admin" })
     }
     const data = await UserModel.updateOne({ _id: id }, { role: "company" })
@@ -221,11 +221,11 @@ router.patch("/updateFav", auth, async (req, res) => {
 router.patch("/updateMatch", auth, async (req, res) => {
   try {
     const newMatchUrl = req.body.match_url; // Assuming the new match URL is sent in the request body
-    
+
     if (typeof newMatchUrl !== "string") {
       return res.status(400).json({ err: "newMatchUrl must be a string" });
     }
-    
+
     const data = await UserModel.updateOne({ _id: req.tokenData._id }, { match_url: newMatchUrl });
     res.json(data);
   } catch (err) {
@@ -243,10 +243,10 @@ router.delete("/:id", authAdmin, async (req, res) => {
     let data = await UserModel.deleteOne({ _id: id });
     const company = await CompanyModel.findOne({ user_id: id });
     if (company) {
-      const jobs = await JobModel.find({company_id:company._id});
+      const jobs = await JobModel.find({ company_id: company._id });
       const jobsIds = jobs.map((job) => job._id.toString());
       data.jobs = await JobModel.deleteMany({ company_id: (company._id.toString()) });
-      data.myContenders = await ContenderModel.deleteMany({job_id: { $in: jobsIds } });
+      data.myContenders = await ContenderModel.deleteMany({ job_id: { $in: jobsIds } });
       data.company = await CompanyModel.deleteOne({ user_id: id });
     }
     else data.contenders = await ContenderModel.deleteMany({ user_id: id });

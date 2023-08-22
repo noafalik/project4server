@@ -253,6 +253,7 @@ router.post("/", auth, async (req, res) => {
       const company = await CompanyModel.findOne({ user_id: req.tokenData._id });
       job.company_id = company._id;
       job.approved = false;
+      if(!job.img_url)job.img_url="https://images.pexels.com/photos/5256816/pexels-photo-5256816.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
       await job.save();
       res.json(job)
     }
