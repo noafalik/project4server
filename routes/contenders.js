@@ -116,7 +116,7 @@ router.get("/myContenders", auth, async (req, res) => {
       .find(filterFind)
       .limit(perPage)
       .skip(page * perPage)
-      .sort({ [sort]: reverse }).populate({ path: 'user_id', select: {'full_name':1,'CV_link':1 }}).populate({ path: 'job_id', select: 'job_title' });
+      .sort({ [sort]: reverse }).populate({ path: 'user_id', select: { 'full_name': 1, 'CV_link': 1 } }).populate({ path: 'job_id', select: 'job_title' });
     res.json(data);
   }
   catch (err) {
@@ -143,6 +143,21 @@ router.get("/jobslist", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ err })
+  }
+});
+
+router.get("/countApplied", async (req, res) => {
+  const job_id = req.query.job_id; // Get job_id from the query
+  let count = 0;
+  try {
+    const contenders = await ContenderModel.find({ job_id});
+
+    contenders.map(contender => count++);
+
+    res.json(count);
+  } catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
   }
 });
 
