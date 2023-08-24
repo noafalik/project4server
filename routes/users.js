@@ -26,7 +26,7 @@ router.get("/userInfo", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -38,7 +38,7 @@ router.get("/single/:id", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -56,7 +56,7 @@ router.get("/usersList", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -69,7 +69,7 @@ router.get("/count", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -94,7 +94,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ msg: "Email already in system", code: 11000 })
     }
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -122,7 +122,7 @@ router.post("/login", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -134,7 +134,7 @@ router.post("/logout", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err });
+    res.status(500).json({ err });
   }
 })
 
@@ -158,7 +158,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -180,7 +180,7 @@ router.patch("/changeRole/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 
 })
@@ -197,7 +197,7 @@ router.patch("/changeRoleToCompany", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 
 })
@@ -214,7 +214,7 @@ router.patch("/updateFav", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -230,7 +230,7 @@ router.patch("/updateMatch", auth, async (req, res) => {
     res.json(data);
   } catch (err) {
     console.log(err);
-    res.status(502).json({ err });
+    res.status(500).json({ err });
   }
 });
 
@@ -254,7 +254,7 @@ router.delete("/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 

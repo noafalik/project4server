@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -26,7 +26,7 @@ router.get("/single/:id", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -39,7 +39,7 @@ router.get("/count", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -55,7 +55,7 @@ router.post("/", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -71,7 +71,7 @@ router.put("/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -83,7 +83,7 @@ router.delete("/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
