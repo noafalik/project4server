@@ -62,7 +62,7 @@ router.get("/", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -121,7 +121,7 @@ router.get("/myContenders", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -142,7 +142,7 @@ router.get("/jobslist", async (req, res) => {
     res.json(jobs);
   } catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 });
 
@@ -154,7 +154,7 @@ router.get("/single/:id", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -202,7 +202,7 @@ router.get("/count", auth, async (req, res) => {
     res.json({ count, pages: Math.ceil(count / perPage) });
   } catch (err) {
     console.log(err);
-    res.status(502).json({ err });
+    res.status(500).json({ err });
   }
 });
 
@@ -218,7 +218,7 @@ router.get("/exists", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -243,7 +243,7 @@ router.post("/", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -267,7 +267,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -310,7 +310,7 @@ router.delete("/", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 

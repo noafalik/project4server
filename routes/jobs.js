@@ -45,7 +45,7 @@ router.get("/match", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -65,7 +65,7 @@ router.get("/", async (req, res) => {
 
   try {
     const page = req.query.page - 1 || 0;
-    const perPage = req.query.perPage ;
+    const perPage = req.query.perPage || 5;
     const searchExp = new RegExp(search, "i");
     const filter = [];
     if (category) filter.push({ category });
@@ -96,7 +96,7 @@ router.get("/", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -110,7 +110,7 @@ router.get("/locations", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -161,7 +161,7 @@ router.get("/myJobs", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -173,7 +173,7 @@ router.get("/single/:id", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -217,7 +217,7 @@ router.get("/count", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -238,7 +238,7 @@ router.post("/group_in", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -259,7 +259,7 @@ router.post("/", auth, async (req, res) => {
     }
     catch (err) {
       console.log(err);
-      res.status(502).json({ err })
+      res.status(500).json({ err })
     }
   }
   else {
@@ -287,7 +287,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -302,7 +302,7 @@ router.patch("/changeApproval/:id/:approved", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 
 })
@@ -324,7 +324,7 @@ router.delete("/:id", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 

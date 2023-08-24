@@ -17,7 +17,7 @@ router.get("/companyInfo", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -37,7 +37,7 @@ router.get("/companiesList", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -50,7 +50,7 @@ router.get("/count", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -73,7 +73,7 @@ router.post("/", auth, async (req, res) => {
       return res.status(400).json({ msg: "User_id already in the system", code: 11000 })
     }
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -97,7 +97,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
@@ -118,7 +118,7 @@ router.delete("/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.status(500).json({ err })
   }
 })
 
