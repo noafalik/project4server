@@ -65,7 +65,7 @@ router.get("/", async (req, res) => {
 
   try {
     const page = req.query.page - 1 || 0;
-    const perPage = req.query.perPage ;
+    const perPage = req.query.perPage || 5 ;
     const searchExp = new RegExp(search, "i");
     const filter = [];
     if (category) filter.push({ category });
