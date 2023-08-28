@@ -15,10 +15,23 @@ app.use(upload({
     limits:{fileSize: 1024 * 1024 * 5}
   }))
 // מבטל אבטחה , ומאפשר לבצע בקשת איי פי איי מדומיין משרת אחר
+// app.use(cors({
+//     origin:'https://relomatch.netlify.app'||'http://localhost:3000',
+//     credentials:true
+// }));
+const allowedOrigins = ['https://relomatch.netlify.app', 'http://localhost:3000'];
+
 app.use(cors({
-    origin:'https://relomatch.netlify.app',
-    credentials:true
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS policy: No access granted to this origin'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
 }));
+
 app.use(cookieParser());
 // כדי שנוכל לשלוח באדי מצד לקוח
 app.use(express.json({limit:'5mb'}));

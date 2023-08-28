@@ -33,7 +33,7 @@ router.get("/userInfo", auth, async (req, res) => {
 router.get("/single/:id", auth, async (req, res) => {
   try {
     const id = req.params.id;
-    let data = await UserModel.findOne({ _id: id }, {email: 1, full_name: 1, linkedIn_url: 1, CV_link: 1 , _id:0});
+    let data = await UserModel.findOne({ _id: id }, { email: 1, full_name: 1, linkedIn_url: 1, CV_link: 1, _id: 0 });
     res.json(data);
   }
   catch (err) {
@@ -117,7 +117,7 @@ router.post("/login", async (req, res) => {
     let token = createToken(user._id, user.role)
     // {token} -> {token:token } אם השם של המאפיין ומשתנה/פרמטר זהה אין צורך בנקודתיים
     // shotcut prop value
-    res.cookie('token', token, { httpOnly: true, sameSite: "lax" });
+    res.cookie('token', token, { httpOnly: true, sameSite: "lax", secure: true });
     return res.status(200).json({ message: "Logged in", login: true });
   }
   catch (err) {
