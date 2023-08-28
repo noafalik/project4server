@@ -19,13 +19,39 @@ router.get("/", async (req, res) => {
       .populate('user_id')
       .limit(perPage)
       .skip(page * perPage)
-      .sort({createdAt:-1})
+      .sort({ createdAt: -1 })
     res.json(data);
   }
   catch (err) {
     console.log(err);
     res.status(500).json({ err })
   }
+})
+
+router.get("/myComments", auth, async (req, res) => {
+  const perPage = req.query.perPage || 5;
+  const page = req.query.page - 1 || 0;
+  try {
+    const userComments = await CommentModel.find({ user_id: req.tokenData._id })
+      .populate('user_id')
+      .limit(perPage)
+      .skip(page * perPage)
+      .sort({ createdAt: -1 });
+
+    const otherComments = await CommentModel.find({ user_id: { $ne: req.tokenData._id } })
+      .populate('user_id')
+      .limit(perPage)
+      .skip(page * perPage)
+      .sort({ createdAt: -1 });
+
+    const allComments = userComments.concat(otherComments);
+
+    res.json(allComments);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err });
+  }
+
 })
 
 
@@ -53,7 +79,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   try {
     let id = req.params.id;
-    const data = await CommentModel.updateOne({_id:id, user_id:req.tokenData._id}, req.body);
+    const data = await CommentModel.updateOne({ _id: id, user_id: req.tokenData._id }, req.body);
     res.json(data);
   }
   catch (err) {
