@@ -93,7 +93,8 @@ router.put("/:id", auth, async (req, res) => {
     else {
       data = await CompanyModel.updateOne({ _id: id, user_id: req.tokenData._id }, req.body);
     }
-    res.json(data)
+    let company = await CompanyModel.findOne({_id:id});
+    res.json({data, company})
   }
   catch (err) {
     console.log(err);
