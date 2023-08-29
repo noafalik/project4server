@@ -17,7 +17,7 @@ app.use(upload({
   }))
 // מבטל אבטחה , ומאפשר לבצע בקשת איי פי איי מדומיין משרת אחר
 app.use(cors({
-    origin:'https://relomatchproj.netlify.app',
+    origin:'https://relomatchweb.onrender.com',
     credentials:true
 }));
 
