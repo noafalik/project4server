@@ -16,10 +16,7 @@ app.use(upload({
     limits:{fileSize: 1024 * 1024 * 5}
   }))
 // מבטל אבטחה , ומאפשר לבצע בקשת איי פי איי מדומיין משרת אחר
-// app.use(cors({
-//     origin:'https://relomatchweb.onrender.com',
-//     credentials:true
-// }));
+
 app.use(cors({
     origin:'http://localhost:3000',
     credentials:true
