@@ -18,7 +18,7 @@ app.use(upload({
 // מבטל אבטחה , ומאפשר לבצע בקשת איי פי איי מדומיין משרת אחר
 
 app.use(cors({
-    origin:'http://localhost:3000',
+    origin:'https://project4server.onrender.com',
     credentials:true
 }));
 
